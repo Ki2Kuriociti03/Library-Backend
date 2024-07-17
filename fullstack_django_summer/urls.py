@@ -15,11 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.urls import re_path as url
+from django.conf import settings
+from django.conf.urls.static import static
 from backend_api.views import BookView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('backend_api/', include('backend_api.urls')),
+    path("admin/", admin.site.urls),
+    path("backend_api/", include("backend_api.urls")),
     path("", BookView.as_view(), name="Books...")
 ]
+
+urlpatterns +=static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -6,7 +6,7 @@ class Book(models.Model):
      name = models.CharField(max_length=200)
      author = models.CharField(max_length=200)
      year = models.IntegerField()
-     rating = models.IntegerField()
+     rating = models.IntegerField(default=0)
      isbn = models.CharField(max_length=20)
      quantity = models.IntegerField()
      tags = models.CharField(max_length=200)
@@ -18,8 +18,8 @@ class User(AbstractUser):
      USERNAME_FIELD = 'email'
      REQUIRED_FIELDS = ['username']
 
-     def __str__(self):
-          return self.username
+     def profile(self):
+          profile = Profile.objects.get(user=self)
 
 
 class Profile(models.Model):
@@ -29,8 +29,6 @@ class Profile(models.Model):
      image = models.ImageField(default='default.jpg', upload_to='user_image')
      verified = models.BooleanField(default=False)
 
-     def __str__(self):
-          return self.full_name
 
 
 def create_user_profile(sender, instance, created, **kwargs):
