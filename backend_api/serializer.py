@@ -1,15 +1,29 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import Token
 
-from .models import Book, User, Profile
+from .models import Book, User, Profile, Favourite, Rating
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainSerializer, TokenObtainPairSerializer, AuthUser
+
+
+class CreateFavouriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favourite
+        fields = ['book']
 
 
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields = '__all__'
+
+
+class FavouriteSerializer(serializers.ModelSerializer):
+    book = BookSerializer(read_only=True)
+
+    class Meta:
+        model = Favourite
+        fields = ['id', 'user', 'book']
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -29,6 +43,13 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['image'] = str(user.profile.image)
         token['verified'] = user.profile.verified
         return token
+
+
+class RatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rating
+        fields = ['id', 'user', 'book', 'rating']
+        read_only_fields = ['user']
 
 
 class RegisterSerializer(serializers.ModelSerializer):
